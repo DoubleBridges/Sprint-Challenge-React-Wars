@@ -26,6 +26,7 @@ const CharacterCards = () => {
   const [prevPage, setPrevPage] = useState('');
   const [nextPage, setNextPage] = useState('');
   const [api, setApi] = useState(`https://swapi.co/api/people/`);
+  const [count, setCount] = useState('');
 
 
   useEffect(() => {
@@ -34,7 +35,8 @@ const CharacterCards = () => {
         setPersonArr(res.data.results)
         setPrevPage(res.data.previous)
         setNextPage(res.data.next)
-        console.log(res)
+        setCount(res.data.count)
+        console.log(res.data)
       })
       .catch(err => console.log(err))
   }, [api]);
@@ -43,6 +45,18 @@ const CharacterCards = () => {
   const prevPageHandler = () => setApi(prevPage)
   const nextPageHandler = () => setApi(nextPage)
 
+  const getPageNum = () => {
+
+    const charArr = api.split('')
+    let pageNum = charArr[charArr.length - 1]
+
+    if (pageNum === '/') {
+      pageNum = 1
+    }
+    return pageNum
+  }
+
+  const pageNum = getPageNum()
 
   const cards = personArr.map(person => {
 
@@ -82,6 +96,8 @@ const CharacterCards = () => {
         <PageButtons
           prevPage={prevPageHandler}
           nextPage={nextPageHandler}
+          pageNum={pageNum}
+          totalPages={count}
         />
       </PageButtonContainer>
     </CardDisplay>
